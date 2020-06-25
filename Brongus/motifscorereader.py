@@ -34,7 +34,7 @@ def tf_pickle_reader(tf_id):
         os.mkdir(tf_csv_folder_location)
     folder_contents = os.listdir(pickle_folder)
     scores_distribution= []
-    if 'tf_{}_scores.pickle'.format(tf) in folder_contents: 
+    if 'tf_{}_scores.pickle'.format(tf) in folder_contents:
         tf_pickle_file = open(path.join(pickle_folder,'tf_{}_scores.pickle'.format(tf)),'rb')
         tf_dict = pickle.load(tf_pickle_file)
         tf_pickle_file.close()
@@ -46,7 +46,7 @@ def tf_pickle_reader(tf_id):
             list_of_scores= []
             gene_description= idconverter.getgene(gene_id).description
             gene_common_name= idconverter.getgene(gene_id).common_name
-            gene_feature_name= idconverter.getgene(gene_id).feature_name 
+            gene_feature_name= idconverter.getgene(gene_id).feature_name
             total_sum_scores= sum(tf_dict[gene_id])
             number_binding_sites= len(np.atleast_1d(tf_dict[gene_id]))
             average_score_per_binding_site= total_sum_scores/number_binding_sites
@@ -55,7 +55,7 @@ def tf_pickle_reader(tf_id):
                 scores_distribution += [score]
             df.loc[gene_id]= [gene_feature_name, gene_common_name, number_binding_sites, total_sum_scores, average_score_per_binding_site, list_of_scores, gene_description]
             gene_ids += [gene_id]
-        df= df.sort_values(['Total Sum of Scores'], ascending=False) 
+        df= df.sort_values(['Total Sum of Scores'], ascending=False)
         df.to_csv(tf_csv)
         tf_histogram_filename= path.join(tf_histogram_folder_location, tf+"_"+tf_id)
         plt.cla()
@@ -67,7 +67,7 @@ def tf_pickle_reader(tf_id):
     else:
         raise IOError
 
-            
+
 def gene_pickle_reader(gene_id):
     gene= idconverter.getgene(gene_id).SGDID
     output_folder= "Output"
@@ -87,7 +87,7 @@ def gene_pickle_reader(gene_id):
         os.mkdir(gene_csv_folder_location)
     pickle_folder_contents = os.listdir(pickle_folder)
     scores_distribution= []
-    if 'gene_{}_scores.pickle'.format(gene) in pickle_folder_contents: 
+    if 'gene_{}_scores.pickle'.format(gene) in pickle_folder_contents:
         df = DataFrame(columns=['TF Feature Name','TF Common Name','Number of Hits','Total Sum of Scores','Avg. Score per Hit','List of Scores','Medline','TF Description'])
         gene_pickle_file = open(path.join(pickle_folder,'gene_{}_scores.pickle'.format(gene)),'rb')
         gene_dict = pickle.load(gene_pickle_file)
@@ -109,7 +109,7 @@ def gene_pickle_reader(gene_id):
                 list_of_scores+= [score]
                 scores_distribution += [score]
             df.loc[tf_id]= [tf_feature_name, tf_common_name, number_binding_sites, total_sum_scores, average_score_per_binding_site, list_of_scores,tf_medline_url,tf_description]
-        df= df.sort(['Total Sum of Scores'], ascending=False) 
+        df= df.sort_values(['Total Sum of Scores'], ascending=False) 
         df.to_csv(gene_csv)
         gene_histogram_filename= path.join(gene_histogram_folder_location,gene+"_"+gene_id)
         plt.cla()
